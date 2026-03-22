@@ -1,0 +1,21 @@
+# 强制忽略你的虚拟环境（绝对不传）
+Lvenv/
+venv/
+env/
+
+# 忽略所有大文件、库文件
+__pycache__/
+*.dll
+*.lib
+*.so
+*.dylib
+*.pth
+*.pt
+*.bin
+*.h5
+*.zip
+*.rar
+
+# 系统缓存
+.DS_Store
+Thumbs.db

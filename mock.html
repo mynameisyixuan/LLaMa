@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 数据分类分级系统</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .animate-in { animation: animateIn 0.4s ease-out forwards; }
+        @keyframes animateIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hidden-view { display: none !important; }
+
+        /* 自定义单选框样式 */
+        .radio-btn-active { background-color: #EEF2FF; border-color: #6366F1; color: #4F46E5; }
+        .radio-btn-inactive { background-color: #F8FAFC; border-color: #E2E8F0; color: #64748B; }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 font-sans text-slate-800 selection:bg-indigo-100 selection:text-indigo-900">
+
+    <!-- 顶部导航栏 -->
+    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 p-2 rounded-lg shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg>
+                </div>
+                <h1 class="text-xl font-bold tracking-wide text-slate-800">
+                    数据资产 <span class="text-indigo-600 font-black">AI 引擎</span>
+                </h1>
+            </div>
+            <!-- 顶级模块切换按钮 -->
+            <div class="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+                <button id="nav-classify" onclick="switchModule('classify')" class="px-6 py-2 rounded-md font-medium text-sm transition-all shadow-sm bg-white text-indigo-700">
+                    分类模块 (Llama)
+                </button>
+                <button id="nav-grade" onclick="switchModule('grade')" class="px-6 py-2 rounded-md font-medium text-sm transition-all text-slate-500 hover:text-slate-800">
+                    分级模块 (BERT)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容 -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+
+        <!-- ========================================== -->
+        <!-- 模块 1: 数据分类模块 (Llama) -->
+        <!-- ========================================== -->
+        <div id="module-classify" class="animate-in">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 min-h-[500px]">
+
+                <div class="flex justify-between items-end mb-6 border-b border-slate-100 pb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-indigo-500"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            智能数据分类
+                        </h2>
+                        <p class="text-slate-500 mt-2 text-sm">基于 Llama 大语言模型，识别字段数据的业务属性</p>
+                    </div>
+
+                    <!-- 分类模块内部的输入方式切换 -->
+                    <div class="flex space-x-3">
+                        <button id="btn-input-single" onclick="switchClassifyInput('single')" class="radio-btn-active border px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500 mr-2"></span> 单字段输入
+                        </button>
+                        <button id="btn-input-batch" onclick="switchClassifyInput('batch')" class="radio-btn-inactive border px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors hover:bg-slate-50">
+                            <span class="w-2 h-2 rounded-full bg-slate-300 mr-2" id="dot-batch"></span> 文件批量分析
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 1.1 交互式单字段输入视图 -->
+                <div id="classify-view-single" class="max-w-3xl py-4 animate-in">
+                    <div class="flex space-x-3 mb-8">
+                        <div class="relative flex-1">
+                            <input type="text" value="账号登录密码" readonly class="w-full pl-4 pr-4 py-3 border border-slate-300 rounded-lg outline-none shadow-sm bg-slate-50 text-slate-600 focus:ring-2 focus:ring-indigo-500" />
+                        </div>
+                        <button class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center shadow-sm opacity-60 cursor-not-allowed">
+                            分析完成
+                        </button>
+                    </div>
+
+                    <div class="bg-indigo-50/50 border border-indigo-100 rounded-xl p-6 shadow-sm">
+                        <h3 class="text-sm font-semibold mb-4 text-slate-600 tracking-wider uppercase">单字段分类结果</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
+                                <p class="text-sm text-slate-400 mb-1">大类 (Main Category)</p>
+                                <p class="font-bold text-indigo-700 text-xl">鉴权数据</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
+                                <p class="text-sm text-slate-400 mb-1">子类 (Sub Category)</p>
+                                <p class="font-bold text-blue-600 text-xl">认证凭据信息</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.2 批量文件上传视图 (仅分类) -->
+                <div id="classify-view-batch" class="hidden-view py-4 animate-in">
+                    <!-- 模拟文件上传区 -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between bg-slate-50 p-4 border border-slate-200 rounded-lg shadow-sm gap-4">
+                        <div class="flex-1 flex items-center space-x-3 w-full">
+                            <button class="flex items-center space-x-2 bg-white border border-slate-300 text-slate-700 px-4 py-2.5 rounded-md shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>
+                                <span class="font-medium text-sm">上传 CSV 文件</span>
+                            </button>
+                            <span class="text-sm font-medium text-emerald-600 flex items-center bg-emerald-50 px-3 py-1.5 rounded-md border border-emerald-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                待分类表字段.csv
+                            </span>
+                        </div>
+                        <button class="flex items-center justify-center space-x-2 bg-indigo-600 text-white px-8 py-2.5 rounded-md shadow-sm font-medium opacity-60 cursor-not-allowed text-sm">
+                            批量分析完成
+                        </button>
+                    </div>
+
+                    <!-- 仅分类结果表格 -->
+                    <div class="border border-slate-200 rounded-lg overflow-hidden shadow-sm bg-white mt-6">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider">
+                                    <th class="p-4 font-medium border-b border-slate-200 w-1/3">输入字段</th>
+                                    <th class="p-4 font-medium border-b border-slate-200 w-1/3">预测大类</th>
+                                    <th class="p-4 font-medium border-b border-slate-200 w-1/3">预测子类</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-sm">
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-slate-800 font-medium">客户真实姓名</td>
+                                    <td class="p-4 text-indigo-700 font-medium">个人属性数据</td>
+                                    <td class="p-4 text-slate-600">人口统计信息</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-slate-800 font-medium">企业注册资本</td>
+                                    <td class="p-4 text-indigo-700 font-medium">企业公开数据</td>
+                                    <td class="p-4 text-slate-600">工商基本信息</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-slate-800 font-medium">家庭详细住址</td>
+                                    <td class="p-4 text-indigo-700 font-medium">个人属性数据</td>
+                                    <td class="p-4 text-slate-600">联系方式</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 模块 2: 数据分级模块 (BERT) -->
+        <!-- ========================================== -->
+        <div id="module-grade" class="hidden-view animate-in">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 min-h-[500px]">
+
+                <div class="mb-6 border-b border-slate-100 pb-6 flex justify-between items-end">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-emerald-500"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            敏感数据分级
+                        </h2>
+                        <p class="text-slate-500 mt-2 text-sm">基于 BERT 微调模型，批量计算并划定数据敏感度级别</p>
+                    </div>
+                    <div class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs font-medium">
+                        当前模式：纯批量文件处理
+                    </div>
+                </div>
+
+                <!-- 批量文件上传区 -->
+                <div class="flex flex-col sm:flex-row items-center justify-between bg-slate-50 p-4 border border-slate-200 rounded-lg shadow-sm gap-4">
+                    <div class="flex-1 flex items-center space-x-3 w-full">
+                        <button class="flex items-center space-x-2 bg-white border border-slate-300 text-slate-700 px-4 py-2.5 rounded-md shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>
+                            <span class="font-medium text-sm">上传待分级文件</span>
+                        </button>
+                        <span class="text-sm font-medium text-emerald-600 flex items-center bg-emerald-50 px-3 py-1.5 rounded-md border border-emerald-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            data_fields_to_grade.csv
+                        </span>
+                    </div>
+                    <button class="flex items-center justify-center space-x-2 bg-emerald-600 text-white px-8 py-2.5 rounded-md shadow-sm font-medium opacity-60 cursor-not-allowed text-sm">
+                        评估计算完成
+                    </button>
+                </div>
+
+                <!-- 仅分级结果表格 -->
+                <div class="border border-slate-200 rounded-lg overflow-hidden shadow-sm bg-white mt-8">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-800 text-slate-100 text-xs uppercase tracking-wider">
+                                <th class="p-4 font-medium border-r border-slate-700 w-1/2">输入字段内容</th>
+                                <th class="p-4 font-medium text-center w-1/2">安全定级 (BERT输出)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 text-slate-800 font-medium">身份证号码</td>
+                                <td class="p-4 text-center">
+                                    <span class="inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-bold border shadow-sm bg-red-100 text-red-700 border-red-200">
+                                        Level 4 (极高敏感)
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 text-slate-800 font-medium">联系手机号</td>
+                                <td class="p-4 text-center">
+                                    <span class="inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-bold border shadow-sm bg-orange-100 text-orange-700 border-orange-200">
+                                        Level 3 (高敏感)
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 text-slate-800 font-medium">客户真实姓名</td>
+                                <td class="p-4 text-center">
+                                    <span class="inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-bold border shadow-sm bg-blue-100 text-blue-700 border-blue-200">
+                                        Level 2 (中敏感)
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 text-slate-800 font-medium">企业注册资本</td>
+                                <td class="p-4 text-center">
+                                    <span class="inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-bold border shadow-sm bg-green-100 text-green-700 border-green-200">
+                                        Level 1 (低敏感/公开)
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 原生 JS 逻辑，仅用于前端 UI 切换演示 -->
+    <script>
+        // 切换顶级模块 (分类 vs 分级)
+        function switchModule(moduleName) {
+            const modClassify = document.getElementById('module-classify');
+            const modGrade = document.getElementById('module-grade');
+            const navClassify = document.getElementById('nav-classify');
+            const navGrade = document.getElementById('nav-grade');
+
+            const activeNavStyle = "px-6 py-2 rounded-md font-medium text-sm transition-all shadow-sm bg-white text-indigo-700";
+            const inactiveNavStyle = "px-6 py-2 rounded-md font-medium text-sm transition-all text-slate-500 hover:text-slate-800";
+
+            if (moduleName === 'classify') {
+                modClassify.classList.remove('hidden-view');
+                modGrade.classList.add('hidden-view');
+                navClassify.className = activeNavStyle;
+                navGrade.className = inactiveNavStyle;
+            } else {
+                modGrade.classList.remove('hidden-view');
+                modClassify.classList.add('hidden-view');
+                navGrade.className = activeNavStyle;
+                navClassify.className = inactiveNavStyle;
+            }
+        }
+
+        // 切换分类模块内部的输入方式 (单字段 vs 批量)
+        function switchClassifyInput(inputType) {
+            const viewSingle = document.getElementById('classify-view-single');
+            const viewBatch = document.getElementById('classify-view-batch');
+            const btnSingle = document.getElementById('btn-input-single');
+            const btnBatch = document.getElementById('btn-input-batch');
+            const dotBatch = document.getElementById('dot-batch');
+
+            const activeBtn = "radio-btn-active border px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors";
+            const inactiveBtn = "radio-btn-inactive border px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors hover:bg-slate-50";
+
+            if (inputType === 'single') {
+                viewSingle.classList.remove('hidden-view');
+                viewBatch.classList.add('hidden-view');
+
+                btnSingle.className = activeBtn;
+                btnSingle.querySelector('span').className = "w-2 h-2 rounded-full bg-indigo-500 mr-2";
+
+                btnBatch.className = inactiveBtn;
+                dotBatch.className = "w-2 h-2 rounded-full bg-slate-300 mr-2";
+            } else {
+                viewBatch.classList.remove('hidden-view');
+                viewSingle.classList.add('hidden-view');
+
+                btnBatch.className = activeBtn;
+                dotBatch.className = "w-2 h-2 rounded-full bg-indigo-500 mr-2";
+
+                btnSingle.className = inactiveBtn;
+                btnSingle.querySelector('span').className = "w-2 h-2 rounded-full bg-slate-300 mr-2";
+            }
+        }
+    </script>
+</body>
+</html>
